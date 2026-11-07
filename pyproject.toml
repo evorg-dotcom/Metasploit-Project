@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "labscout"
+version = "0.1.0"
+description = "Lab-only, recon-first AI pentesting assistant for an isolated Metasploitable 3 VM. Authorized use only."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+# Recon XML parsing. python-nmap is the primary parser; defusedxml hardens the
+# stdlib fallback. recon.py works without either, using the stdlib parser.
+recon = ["python-nmap>=0.7.1", "defusedxml>=0.7.1"]
+# AI advisor providers (only needed if ai_provider != "manual").
+openai = ["openai>=1.0.0"]
+# The optional, gated Metasploit validation step.
+validation = ["pymetasploit3>=1.0"]
+dev = ["pytest>=7.0", "ruff>=0.5"]
+
+[project.scripts]
+labscout = "labscout.orchestrator:main"
+
+[tool.setuptools.packages.find]
+include = ["labscout*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "S"]
+# S603/S607: we call nmap via subprocess with a fixed argv and shell=False on
+# purpose; that is the safe pattern, so the subprocess warnings are expected.
+# S310: the only URL opened is the Ollama endpoint from config (localhost by
+# default), never an arbitrary user-supplied URL.
+ignore = ["S603", "S607", "S310"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # asserts are the point of a test
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

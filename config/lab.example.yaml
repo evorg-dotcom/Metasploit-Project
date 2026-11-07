@@ -1,0 +1,44 @@
+# LabScout lab configuration — EXAMPLE.
+#
+# Copy this file to config/lab.yaml and edit it for your own isolated lab.
+# config/lab.yaml is gitignored so you never commit your real setup.
+#
+# SCOPE RULE: every address here must be a private (RFC 1918 / loopback)
+# address on your isolated host-only network. LabScout refuses anything that
+# resolves to a public IP, and refuses anything not matched by this list.
+
+# The only hosts LabScout is ever allowed to touch. Single IPs or CIDRs.
+# This should contain ONLY your Metasploitable 3 VM (and nothing else).
+allowlist:
+  - "192.168.56.101"        # <- your Metasploitable 3 VM, host-only adapter
+  # - "192.168.56.0/24"     # (a CIDR is allowed, but keep scope as tight as you can)
+
+# Pre-filled value for the runtime prompt. You still have to confirm it.
+default_target: "192.168.56.101"
+
+# AI model provider. Default "manual" needs no API key and no model at all,
+# and is the best fit for a low-RAM laptop, especially while a VM is running.
+#   manual  -> no LLM; LabScout prints findings and a rules-based next-step list
+#   openai  -> uses OpenAI; set OPENAI_API_KEY in your environment
+#   ollama  -> uses Ollama (local server, or cloud via the signed-in app)
+ai_provider: "manual"
+
+openai_model: "gpt-4o-mini"
+
+# For a local model on a modest machine, keep it small (1B-3B). Good picks:
+#   llama3.2:3b, qwen2.5:3b, llama3.2:1b
+# For a cloud model, sign the Ollama app in and use a :cloud tag, e.g.
+#   gemma4:cloud  (keep ollama_host on localhost; the app forwards it)
+ollama_model: "llama3.2:3b"
+
+# Local server (default). To call Ollama's cloud API directly instead, set this
+# to https://ollama.com and export OLLAMA_API_KEY. Localhost needs no key.
+ollama_host: "http://127.0.0.1:11434"
+
+# Optional Metasploit RPC connection, used ONLY if you enable the optional
+# validation step. Start the RPC server yourself with:
+#   msfrpcd -P "$MSF_RPC_PASSWORD" -S -a 127.0.0.1 -p 55553
+# The password is read from the MSF_RPC_PASSWORD environment variable, never
+# stored in this file.
+msf_host: "127.0.0.1"
+msf_port: 55553

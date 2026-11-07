@@ -1,0 +1,14 @@
+# Core (required)
+PyYAML>=6.0
+
+# Recon parsing (optional but recommended; recon.py falls back to stdlib XML)
+python-nmap>=0.7.1
+
+# Optional: AI advisor providers (only needed if ai_provider != "manual")
+# openai>=1.0.0
+
+# Optional: gated validation step via your local Metasploit RPC
+# pymetasploit3>=1.0
+
+# Dev/test
+pytest>=7.0

@@ -12,3 +12,14 @@
 
 pkg/
 src/
+# Never commit your real lab config or run artifacts
+config/lab.yaml
+labscout_report.md
+labscout_audit.log
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
